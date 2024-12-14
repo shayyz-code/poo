@@ -32,7 +32,7 @@ A Tiny Interpreted but a Fast language written in Rust, featuring variable decla
 1. Curl the latest release.
 
 ```bash
-curl -L https://github.com/shayyz-code/poo/releases/download/v0.1.4/poo > poo
+curl -L https://github.com/shayyz-code/poo/releases/tag/v0.1/poo > poo
 ```
 
 2. Consider the installation directory.
