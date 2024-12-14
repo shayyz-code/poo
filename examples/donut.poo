@@ -1,0 +1,92 @@
+use math::PI;
+use time::sleep;
+use std::pout;
+use std::cls;
+
+poof rotate_donut() {
+
+    poo width <: 80;
+    poo height <: 24;
+    
+    mut a <: 0.0;
+    mut b <: 0.0;
+
+    poo delay <: 0;
+
+    poo luminance_str str = ".,-~:;=!*#$@";
+
+    while true {
+        mut buffer vec:vec:char = [[' '].extend_(width)].extend_(height);
+        mut z_buffer vec:vec:float = [[0.0].extend_(width)].extend_(height);
+        
+        poo r1 <: 1.0;
+        poo r2 <: 2.0;
+        poo k1 <: 15.0;
+        poo k2 <: 5.0;
+
+        for theta in 0..360 step 10 {
+            poo theta float = theta._f() * PI / 180.0;
+            poo sin_theta float = theta.sin(); 
+            poo cos_theta float = theta.cos();
+
+            for phi in 0..360 step 5 {
+                poo phi float = phi._f() * PI / 180.0;
+                poo sin_phi float =  phi.sin();
+                poo cos_phi float = phi.cos();
+
+                poo sin_a float = a.sin();
+                poo cos_a float = a.cos();
+                poo sin_b float = a.sin();
+                poo cos_b float = a.cos();
+                
+
+                poo circle_x float = r2 + r1 * cos_theta;
+                poo circle_y float = r1 * sin_theta;
+
+                poo x float = circle_x * (cos_b * cos_phi + sin_a * sin_b * sin_phi)
+                                - circle_y * cos_a * sin_b;
+                poo y float = circle_x * (cos_phi * sin_b - cos_b * sin_a * sin_phi)
+                                + circle_y * cos_a * cos_b;
+                poo z float = k2 + cos_a * circle_x * sin_phi + circle_y * sin_a;
+                poo ooz float = 1.0 / z;
+
+                poo xp float = width._f() / 2.0 + k1 * ooz * x;
+                poo xp int = xp._i();
+                poo yp float = height._f() / 2.0 - k1 * ooz * y;
+                poo yp int = yp._i();
+
+                poo luminance float = cos_phi * cos_theta * sin_b
+                                    - cos_a * cos_theta * sin_phi
+                                    - sin_a * sin_theta
+                                    + cos_b * (cos_a * sin_theta - cos_theta * sin_a * sin_phi);
+
+                poo luminance_index float = luminance * 8.0;
+                poo luminance_index int = luminance_index._i();
+
+                if xp > -1 and xp < width and yp > -1 and yp < height and luminance_index > -1  and luminance_index < 13 {
+                    if ooz > z_buffer[yp][xp] {
+                        z_buffer[yp][xp] = ooz;
+                        poo luminance_chars vec:char = luminance_str.chars();
+                        poo luminance_nth_char char = luminance_chars.nth_otherwise(luminance_index, ' ');
+                        buffer[yp][xp] = luminance_nth_char;
+                    }
+                }
+            }
+        }
+
+        cls();
+
+        for row in buffer {
+            for col in row {
+                pout(col);
+            }
+            pout('\n');
+        }
+
+        a = a + 0.04;
+        b = b + 0.08;
+        sleep(delay);
+    }
+}
+
+rotate_donut();
